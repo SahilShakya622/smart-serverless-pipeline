@@ -1,6 +1,8 @@
 import logging
 import azure.functions as func
 
+logging.warning("FUNCTION APP LOADED.")
+
 app = func.FunctionApp()
 
 @app.blob_trigger(
@@ -9,5 +11,4 @@ app = func.FunctionApp()
     connection="AzureWebJobsStorage"
 )
 def process_blob(myblob: func.InputStream):
-    logging.info(f"Blob name: {myblob.name}")
-    logging.info(f"Blob size: {myblob.length} bytes")
+    logging.info(f"bLOB TRIGGERED:{myblob.name}")
