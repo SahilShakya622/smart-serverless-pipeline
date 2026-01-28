@@ -17,9 +17,11 @@ resource "azurerm_storage_account" "storage" {
   account_replication_type = "LRS"
 }
 
+# ⚠️ REQUIRED to use storage_account_name here
+# (Ignore VS Code deprecation warning – provider still requires it)
 resource "azurerm_storage_container" "input" {
   name                  = "input-files"
-  storage_account_id    = azurerm_storage_account.storage.name
+  storage_account_name  = azurerm_storage_account.storage.name
   container_access_type = "private"
 }
 
@@ -80,7 +82,7 @@ resource "azurerm_application_insights" "appi" {
 }
 
 #################################
-# Azure Function App (Node.js)
+# Azure Function App (Python)
 #################################
 resource "azurerm_linux_function_app" "function" {
   name                = "smart-serverless-func"
@@ -88,7 +90,7 @@ resource "azurerm_linux_function_app" "function" {
   resource_group_name = azurerm_resource_group.rg.name
   service_plan_id     = azurerm_service_plan.plan.id
 
-  storage_account_name       = azurerm_storage_account.storage.name
+  storage_account_name = azurerm_storage_account.storage.name
   storage_account_access_key = azurerm_storage_account.storage.primary_access_key
 
   app_settings = {
