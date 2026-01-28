@@ -93,17 +93,18 @@ resource "azurerm_linux_function_app" "function" {
   storage_account_name = azurerm_storage_account.storage.name
   storage_account_access_key = azurerm_storage_account.storage.primary_access_key
 
-  app_settings = {
-    AzureWebJobsStorage                   = azurerm_storage_account.storage.primary_connection_string
-    FUNCTIONS_WORKER_RUNTIME              = "python"
-    COSMOS_ENDPOINT                       = azurerm_cosmosdb_account.cosmos.endpoint
-    COSMOS_KEY                            = azurerm_cosmosdb_account.cosmos.primary_key
-    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.appi.connection_string
-  }
+app_settings = {
+  AzureWebJobsStorage                   = azurerm_storage_account.storage.primary_connection_string
+  FUNCTIONS_WORKER_RUNTIME              = "python"
+  COSMOS_ENDPOINT                       = azurerm_cosmosdb_account.cosmos.endpoint
+  COSMOS_KEY                            = azurerm_cosmosdb_account.cosmos.primary_key
+  APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.appi.connection_string
+  FUNCTIONS_EXTENSION_VERSION           = "~4"
+}
 
-  site_config {
-    application_stack {
-      python_version = "3.9"
-    }
+site_config {
+  application_stack {
+    python_version = "3.10"
   }
+}
 }
