@@ -1,10 +1,17 @@
 import logging
 import os
-from azure.cosmos import CosmosClient
-import azure.functions as func
 from datetime import datetime
+import azure.functions as func
+from azure.cosmos import CosmosClient
 
-def main(myblob: func.InputStream):
+app = func.FunctionApp()
+
+@app.blob_trigger(
+    arg_name="myblob",
+    path="input-files/{name}",
+    connection="AzureWebJobsStorage"
+)
+def blob_processor(myblob: func.InputStream):
     logging.info(f"Processing file: {myblob.name}")
 
     content = myblob.read().decode("utf-8")
@@ -29,7 +36,7 @@ def main(myblob: func.InputStream):
         "processedAt": datetime.utcnow().isoformat()
     })
 
-    logging.info("Result saved to Cosmos DB")
+    logging.info("Saved result to Cosmos DB")
 
     if status == "FAILED":
         raise Exception("High error count detected")
