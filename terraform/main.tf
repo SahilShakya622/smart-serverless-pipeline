@@ -19,7 +19,7 @@ resource "azurerm_storage_account" "storage" {
 
 resource "azurerm_storage_container" "input" {
   name                  = "input-files"
-  storage_account_id    = azurerm_storage_account.storage.id
+  storage_account_id    = azurerm_storage_account.storage.name
   container_access_type = "private"
 }
 
@@ -93,7 +93,7 @@ resource "azurerm_linux_function_app" "function" {
 
   app_settings = {
     AzureWebJobsStorage                   = azurerm_storage_account.storage.primary_connection_string
-    FUNCTIONS_WORKER_RUNTIME              = "node"
+    FUNCTIONS_WORKER_RUNTIME              = "python"
     COSMOS_ENDPOINT                       = azurerm_cosmosdb_account.cosmos.endpoint
     COSMOS_KEY                            = azurerm_cosmosdb_account.cosmos.primary_key
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.appi.connection_string
@@ -101,7 +101,7 @@ resource "azurerm_linux_function_app" "function" {
 
   site_config {
     application_stack {
-      node_version = "18"
+      python_version = "3.9"
     }
   }
 }
